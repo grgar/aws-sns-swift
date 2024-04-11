@@ -300,6 +300,25 @@ public class AWSSNS {
         }).resume()
     }
 
+    public func unsubscribe(subscriptionARN: String, completion: @escaping (Bool, Error?) -> Void) {
+        var params = defaultParams
+        params["Action"] = "Unsubscribe"
+        params["SubscriptionArn"] = subscriptionARN
+
+        let request: URLRequest
+        do {
+            request = try self.request(with: params)
+        } catch {
+            completion(false, error)
+            return
+        }
+
+        session.dataTask(with: request, completionHandler: { data, response, error in
+            let error = self.checkForError(response: response, data: data, error: error)
+            completion(error == nil, error)
+        }).resume()
+    }
+
     private func request(with urlParams: [String: String?]) throws -> URLRequest {
         var urlComponents = URLComponents(string: host)!
         urlComponents.queryItems = urlParams.filter { $0.value != nil && $0.value?.isEmpty == false }
