@@ -274,6 +274,32 @@ public class AWSSNS {
         }.resume()
     }
 
+    public func subscribe(endpointARN: String, topicARN: String, completion: @escaping (Bool, String?, Error?) -> Void) {
+        var params = defaultParams
+        params["Action"] = "Subscribe"
+        params["EndpointArn"] = endpointARN
+        params["TopicArn"] = topicARN
+
+        let request: URLRequest
+        do {
+            request = try self.request(with: params)
+        } catch {
+            completion(false, nil, error)
+            return
+        }
+
+        session.dataTask(with: request, completionHandler: { data, response, error in
+            let error = self.checkForError(response: response, data: data, error: error)
+            if error == nil, let data = data, let responseBody = String(data: data, encoding: .utf8) {
+                let xml = SWXMLHash.parse(responseBody)
+                let subscriptionARN = xml["SubscriptionArn"].element?.text
+                completion(true, subscriptionARN, nil)
+            } else {
+                completion(false, nil, error)
+            }
+        }).resume()
+    }
+
     private func request(with urlParams: [String: String?]) throws -> URLRequest {
         var urlComponents = URLComponents(string: host)!
         urlComponents.queryItems = urlParams.filter { $0.value != nil && $0.value?.isEmpty == false }
