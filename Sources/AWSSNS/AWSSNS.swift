@@ -23,7 +23,7 @@ public class AWSSNS {
     public init(host: String, session: URLSession = URLSession(configuration: .default), accessKeyID: String, secretAccessKey: String) {
         var normalizedHost = host
         if normalizedHost.hasSuffix("/") {
-            normalizedHost.remove(at: String.Index(encodedOffset: normalizedHost.count - 1))
+            normalizedHost = String(normalizedHost.dropLast(1))
         }
 
         self.host = host
