@@ -279,6 +279,7 @@ public class AWSSNS {
         params["Action"] = "Subscribe"
         params["EndpointArn"] = endpointARN
         params["TopicArn"] = topicARN
+        params["Protocol"] = "application"
 
         let request: URLRequest
         do {
