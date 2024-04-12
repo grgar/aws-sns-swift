@@ -293,7 +293,7 @@ public class AWSSNS {
             let error = self.checkForError(response: response, data: data, error: error)
             if error == nil, let data = data, let responseBody = String(data: data, encoding: .utf8) {
                 let xml = SWXMLHash.parse(responseBody)
-                let subscriptionARN = xml["SubscriptionArn"].element?.text
+                let subscriptionARN = xml["SubscribeResponse"]["SubscribeResult"]["SubscriptionArn"].element?.text
                 completion(true, subscriptionARN, nil)
             } else {
                 completion(false, nil, error)
