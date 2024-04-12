@@ -277,7 +277,7 @@ public class AWSSNS {
     public func subscribe(endpointARN: String, topicARN: String, completion: @escaping (Bool, String?, Error?) -> Void) {
         var params = defaultParams
         params["Action"] = "Subscribe"
-        params["EndpointArn"] = endpointARN
+        params["Endpoint"] = endpointARN
         params["TopicArn"] = topicARN
         params["Protocol"] = "application"
 
